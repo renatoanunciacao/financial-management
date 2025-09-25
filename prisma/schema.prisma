@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AuthProvider {
+  google
+  credentials
+}
+
+enum TransactionType {
+  income
+  expense
+}
+
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  password     String? // opcional, para quem logar via credenciais
+  authProvider AuthProvider @default(credentials)
+  picture      String?
+
+  monthlyData         MonthlyData[]
+  transactions        Transaction[]
+  cards               Card[]
+  categories          Category[]
+  passwordResetTokens PasswordResetToken[]
+  debts               Debt[]
+}
+
+model MonthlyData {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  month         DateTime // ex: 2025-07-01
+  plannedIncome Float // valor planejado para o mês
+
+  fixedExpenses       FixedExpense[]
+  installmentExpenses InstallmentExpense[]
+  borrowers           Borrower[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FixedExpense {
+  id            String      @id @default(uuid())
+  monthlyDataId String
+  monthlyData   MonthlyData @relation(fields: [monthlyDataId], references: [id])
+
+  name    String
+  amount  Float
+  dueDate DateTime // data de vencimento
+  isPaid  Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InstallmentExpense {
+  id     String  @id @default(uuid())
+  debt   Debt?   @relation("DebtInstallments", fields: [debtId], references: [id], onDelete: Cascade)
+  debtId String?
+
+  monthlyDataId String
+  monthlyData   MonthlyData @relation(fields: [monthlyDataId], references: [id])
+
+  name              String
+  amount            Float
+  dueDate           DateTime
+  isPaid            Boolean  @default(false)
+  installmentNumber Int
+  totalInstallments Int
+  cardId            String?
+  card              Card?    @relation(fields: [cardId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Borrower {
+  id            String      @id @default(uuid())
+  name          String
+  monthlyDataId String
+  monthlyData   MonthlyData @relation(fields: [monthlyDataId], references: [id])
+}
+
+model Debt {
+  id           String @id @default(uuid())
+  borrowerName String // apenas o nome do devedor
+
+  amount  Float
+  dueDate DateTime
+  isPaid  Boolean  @default(false)
+  cardId  String
+  card    Card     @relation(fields: [cardId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  installments InstallmentExpense[] @relation("DebtInstallments", onDelete: Cascade) // parcelas do debt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  type        TransactionType
+  amount      Float
+  description String
+  date        DateTime
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Card {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  name String
+
+  installmentExpenses InstallmentExpense[]
+  debts               Debt[]
+
+  @@unique([userId, name])
+}
+
+model Category {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  name         String
+  transactions Transaction[]
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

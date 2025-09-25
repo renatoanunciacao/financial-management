@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Diagrama ER - Controle Financeiro
 
-## Getting Started
+```mermaid
+erDiagram
+    User {
+        string id PK
+        string name
+        string email
+        string password
+        string authProvider
+    }
 
-First, run the development server:
+    MonthlyData {
+        string id PK
+        date month
+        float plannedIncome
+        dateTime createdAt
+        dateTime updatedAt
+    }
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+    FixedExpense {
+        string id PK
+        string name
+        float amount
+        date dueDate
+        boolean isPaid
+        dateTime createdAt
+        dateTime updatedAt
+    }
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    InstallmentExpense {
+        string id PK
+        string name
+        float amount
+        date dueDate
+        boolean isPaid
+        dateTime createdAt
+        dateTime updatedAt
+    }
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    Borrower {
+        string id PK
+        string name
+    }
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    Debt {
+        string id PK
+        float amount
+        date dueDate
+        boolean isPaid
+        dateTime createdAt
+        dateTime updatedAt
+    }
 
-## Learn More
+    Transaction {
+        string id PK
+        string type
+        float amount
+        string description
+        date date
+        dateTime createdAt
+        dateTime updatedAt
+    }
 
-To learn more about Next.js, take a look at the following resources:
+    Card {
+        string id PK
+        string name
+    }
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    Category {
+        string id PK
+        string name
+    }
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    %% Relações
+    User ||--o{ MonthlyData : "has"
+    User ||--o{ Transaction : "has"
+    User ||--o{ Card : "has"
+    User ||--o{ Category : "has"
 
-## Deploy on Vercel
+    MonthlyData ||--o{ FixedExpense : "has"
+    MonthlyData ||--o{ InstallmentExpense : "has"
+    MonthlyData ||--o{ Borrower : "has"
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    Borrower ||--o{ Debt : "has"
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    Card ||--o{ InstallmentExpense : "linked to"
+    Card ||--o{ Debt : "linked to"
+
+    Category ||--o{ Transaction : "classifies"
