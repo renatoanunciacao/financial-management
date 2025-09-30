@@ -1,14 +1,12 @@
-# Diagrama ER - Controle Financeiro
-
-```mermaid
 erDiagram
-    User {
-        string id PK
-        string name
-        string email
-        string password
-        string authProvider
-    }
+User {
+string id PK
+string name
+string email
+string password
+string authProvider
+string? picture
+}
 
     MonthlyData {
         string id PK
@@ -34,6 +32,8 @@ erDiagram
         float amount
         date dueDate
         boolean isPaid
+        int installmentNumber
+        int totalInstallments
         dateTime createdAt
         dateTime updatedAt
     }
@@ -45,6 +45,7 @@ erDiagram
 
     Debt {
         string id PK
+        string borrowerName
         float amount
         date dueDate
         boolean isPaid
@@ -72,17 +73,28 @@ erDiagram
         string name
     }
 
+    PasswordResetToken {
+        string id PK
+        string token
+        dateTime expiresAt
+        dateTime createdAt
+    }
+
     %% Relações
     User ||--o{ MonthlyData : "has"
     User ||--o{ Transaction : "has"
     User ||--o{ Card : "has"
     User ||--o{ Category : "has"
+    User ||--o{ Debt : "has"
+    User ||--o{ PasswordResetToken : "has"
 
     MonthlyData ||--o{ FixedExpense : "has"
     MonthlyData ||--o{ InstallmentExpense : "has"
     MonthlyData ||--o{ Borrower : "has"
 
     Borrower ||--o{ Debt : "has"
+
+    Debt ||--o{ InstallmentExpense : "has"
 
     Card ||--o{ InstallmentExpense : "linked to"
     Card ||--o{ Debt : "linked to"
