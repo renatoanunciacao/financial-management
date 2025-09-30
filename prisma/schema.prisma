@@ -111,7 +111,7 @@ model Debt {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  installments InstallmentExpense[] @relation("DebtInstallments", onDelete: Cascade) // parcelas do debt
+  installments InstallmentExpense[] @relation("DebtInstallments") // parcelas do debt
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

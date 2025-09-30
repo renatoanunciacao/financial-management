@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useTransition } from "react";
 import { ColumnDef, useReactTable, getCoreRowModel, getPaginationRowModel, flexRender } from "@tanstack/react-table";
 import { Button } from "./ui/Button";
 import { NewLoanModal } from "./LoanFormData";
@@ -8,6 +8,8 @@ import { Pagination } from "./Pagination";
 import { LoanDetailModal, LoanDetailModalProps } from "./LoanDetailModal";
 import { TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import AlertMessage from "./Alert";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { LoansReportPDF } from "./LoansReportPTD";
 
 interface CardLoan {
     id: string;
@@ -19,16 +21,30 @@ interface CardLoan {
     paidInstallments: number;
 }
 
+interface Session {
+    user?: {
+        id?: string;
+        name?: string | null;
+        email?: string | null;
+        image?: string | null;
+    };
+    expires: string;
+}
+
+
 export default function CardLoansTable() {
     const [loans, setLoans] = useState<CardLoan[]>([]);
-    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [debts, setDebts] = useState([]);
+    const [modalOpen, setModalOpen] = useState(false);
     const [selectedLoan, setSelectedLoan] = useState<LoanDetailModalProps['loan']>(null);
-    const [detailModalOpen, setDetailModalOpen] = useState<boolean>(false);
+    const [detailModalOpen, setDetailModalOpen] = useState(false);
     const [loadingDetail, setLoadingDetail] = useState(false);
-
     const [loanToDelete, setLoanToDelete] = useState<CardLoan | null>(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [user, setUser] = useState<Session | null>(null);
+
+
 
     const handleViewLoanDetail = async (loan: CardLoan) => {
         setLoadingDetail(true);
@@ -75,6 +91,29 @@ export default function CardLoansTable() {
         fetchLoans();
     }, []);
 
+    useEffect(() => {
+        async function fetchData() {
+
+            const session = await fetch("/api/auth/session");
+            const result = await session.json();
+            setUser(result);
+
+            const debtsRes = await fetch("/api/card-loans/active"); // rota para dívidas ativas
+            const data = await debtsRes.json();
+            const mapped = data.map((debt: any) => ({
+                id: debt.id,
+                borrowerName: debt.borrowerName,
+                amount: debt.amount,
+                card: debt.card,
+                installments: debt.installments?.filter((i: any) => !i.isPaid) || [],
+            }));
+
+            setDebts(mapped);
+        }
+        fetchData();
+    }, []);
+
+
     const handleSaveLoan = async (loan: any) => {
         try {
             const res = await fetch("/api/card-loans", {
@@ -90,7 +129,7 @@ export default function CardLoansTable() {
             }
 
             setModalOpen(false);
-            setAlert({ type: 'success', message: 'Emprestimo criado com sucesso' });
+            setAlert({ type: 'success', message: 'Empréstimo criado com sucesso' });
             setTimeout(() => setAlert(null), 3000);
 
             // Atualiza a lista após salvar
@@ -132,6 +171,8 @@ export default function CardLoansTable() {
 
         }
     };
+
+
 
     const columns = useMemo<ColumnDef<CardLoan>[]>(() => [
         { accessorKey: "borrower", header: "Quem deve" },
@@ -182,7 +223,21 @@ export default function CardLoansTable() {
 
     return (
         <div className="p-6 bg-gray-50 rounded-lg shadow-lg">
-            <div className="flex justify-end items-center mb-6">
+            <div className="flex justify-between items-center mb-6">
+                <PDFDownloadLink
+                    document={<LoansReportPDF debts={debts} user={{ name: user?.user?.name, email: user?.user?.email }} />}
+                    fileName="emprestimos.pdf"
+                    style={{
+                        backgroundColor: "#2563EB",
+                        color: "white",
+                        padding: "10px 20px",
+                        borderRadius: 6,
+                        textDecoration: "none",
+                        fontWeight: "bold"
+                    }}
+                >
+                    {({ loading }) => (loading ? "Gerando PDF..." : "📄 Gerar PDF")}
+                </PDFDownloadLink>
                 <Button onClick={() => setModalOpen(true)}>+ Novo Empréstimo</Button>
             </div>
 

@@ -22,8 +22,6 @@ export default function SummaryCards({ reloadTrigger, onSummaryChange }: Summary
       setTotalExpense(data.totalExpenses || 0);
       setTotalIncome(data.totalIncomes || 0);
       onSummaryChange({ incomes: data.totalIncomes, expenses: data.totalExpenses });
-
-      console.log(`Resumo de ${data.month}/${data.year}:`, data);
     } catch (error) {
       console.error(error);
     }

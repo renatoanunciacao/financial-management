@@ -20,43 +20,41 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-       router.push('/login');
+      router.push('/login');
     }
   }, [status, router]);
 
- if (status === "loading") {
-  return <LoadingBubbles />;
-}
+  if (status === "loading") {
+    return <LoadingBubbles />;
+  }
 
 
-const handleAddTransaction = () => {
+  const handleAddTransaction = () => {
     setReloadTrigger((prev: any) => prev + 1);
   }
 
   return (
-  <div className="min-h-screen flex flex-col bg-gray-100">
-  <Header />
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      <Header />
 
-  <main className="flex flex-col p-6 space-y-6">
-      <DashboardHeader />
+      <main className="flex flex-col p-6 space-y-6">
+        <DashboardHeader />
 
-     <SummaryCards reloadTrigger={reloadTrigger} onSummaryChange={setSummary}/>
+        <SummaryCards reloadTrigger={reloadTrigger} onSummaryChange={setSummary} />
 
-     <QuickActions onAddTransaction={handleAddTransaction} />
-     
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Gráfico */}
-        <div className="bg-white shadow rounded-2xl p-4 min-h-[300px] flex items-center justify-center">
-          <IncomeExpenseChart income={summary.incomes} expense={summary.expenses} />
-        </div>
+        <QuickActions onAddTransaction={handleAddTransaction} />
 
-        
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Gráfico */}
+          <div className="bg-white shadow rounded-2xl p-4 min-h-[300px] flex items-center justify-center">
+            <IncomeExpenseChart income={summary.incomes} expense={summary.expenses} />
+          </div>
 
-        {/* Últimas movimentações */}
-         <RecentTransactions  />
-      </section>
-    </main>
-</div>
+          {/* Últimas movimentações */}
+          <RecentTransactions />
+        </section>
+      </main>
+    </div>
 
   );
 }
