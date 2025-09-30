@@ -6,7 +6,7 @@ erDiagram
         string email
         string password
         string authProvider
-        string? picture
+        string picture
     }
 
     MonthlyData {
@@ -100,3 +100,4 @@ erDiagram
     Card ||--o{ Debt : "linked to"
 
     Category ||--o{ Transaction : "classifies"
+
