@@ -1,5 +1,5 @@
+```mermaid
 erDiagram
-
     User {
         string id PK
         string name
