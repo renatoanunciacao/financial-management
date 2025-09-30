@@ -1,12 +1,12 @@
 erDiagram
-User {
-string id PK
-string name
-string email
-string password
-string authProvider
-string? picture
-}
+    User {
+        string id PK
+        string name
+        string email
+        string password
+        string authProvider
+        string? picture
+    }
 
     MonthlyData {
         string id PK
