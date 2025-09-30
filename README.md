@@ -1,4 +1,5 @@
 erDiagram
+
     User {
         string id PK
         string name
@@ -93,7 +94,6 @@ erDiagram
     MonthlyData ||--o{ Borrower : "has"
 
     Borrower ||--o{ Debt : "has"
-
     Debt ||--o{ InstallmentExpense : "has"
 
     Card ||--o{ InstallmentExpense : "linked to"
