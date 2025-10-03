@@ -71,6 +71,53 @@ export function LoanDetailModal({ open, onClose, loan, onUpdateLoan }: LoanDetai
         }
     }
 
+    // Dentro do seu componente LoanDetailModal, logo após handleMarkAsPaid
+    async function handlePayAll() {
+        try {
+            // Filtra apenas parcelas em aberto
+            const unpaidInstallments = currentLoan.installments.filter(inst => !inst.isPaid);
+
+            if (unpaidInstallments.length === 0) {
+                setAlert({ type: "success", message: "Todas as parcelas já estão pagas! ✅" });
+                setTimeout(() => setAlert(null), 3000);
+                return;
+            }
+
+            // Faz patch para cada parcela
+            const promises = unpaidInstallments.map(inst =>
+                fetch(`/api/installments/${inst.id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ isPaid: true }),
+                }).then(res => {
+                    if (!res.ok) throw new Error(`Erro ao atualizar parcela ${inst.name}`);
+                    return res.json();
+                })
+            );
+
+            const updatedInstallments = await Promise.all(promises);
+
+            // Atualiza o estado
+            const updatedLoan = {
+                ...currentLoan,
+                installments: currentLoan.installments.map(inst =>
+                    updatedInstallments.find(u => u.id === inst.id) ? { ...inst, isPaid: true } : inst
+                ),
+            };
+
+            setCurrentLoan(updatedLoan);
+            onUpdateLoan?.(updatedLoan);
+
+            setAlert({ type: "success", message: "Todas as parcelas foram pagas com sucesso! ✅" });
+            setTimeout(() => setAlert(null), 3000);
+        } catch (err) {
+            console.error(err);
+            setAlert({ type: "error", message: "Erro ao pagar todas as parcelas ❌" });
+            setTimeout(() => setAlert(null), 3000);
+        }
+    }
+
+
     return (
         <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-2 sm:p-4"
@@ -85,12 +132,20 @@ export function LoanDetailModal({ open, onClose, loan, onUpdateLoan }: LoanDetai
                     <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
                         Empréstimo - {loan.borrowerName}
                     </h2>
-                    <Button
-                        className="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-xl shadow flex-shrink-0 text-sm sm:text-base"
-                        onClick={onClose}
-                    >
-                        Fechar
-                    </Button>
+                    <div className="flex gap-2">
+                        <Button
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-xl shadow flex-shrink-0 text-sm sm:text-base"
+                            onClick={handlePayAll}
+                        >
+                            Pagar Todas
+                        </Button>
+                        <Button
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-3 sm:px-4 py-2 rounded-xl shadow flex-shrink-0 text-sm sm:text-base"
+                            onClick={onClose}
+                        >
+                            Fechar
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Conteúdo rolável */}
