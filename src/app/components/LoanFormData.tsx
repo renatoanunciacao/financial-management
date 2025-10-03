@@ -13,6 +13,7 @@ interface NewLoanModalProps {
 
 interface LoanFormData {
     borrowerName: string;
+    borrowerCellPhone?: string;
     totalValue: number;
     installments: number;
     purchaseDate: string;
@@ -22,6 +23,7 @@ interface LoanFormData {
 export function NewLoanModal({ open, onClose, onSave }: NewLoanModalProps) {
     const [form, setForm] = useState<LoanFormData>({
         borrowerName: "",
+        borrowerCellPhone: "",
         totalValue: 0,
         installments: 1,
         purchaseDate: "",
@@ -37,7 +39,7 @@ export function NewLoanModal({ open, onClose, onSave }: NewLoanModalProps) {
     };
 
     const handleSubmit = async () => {
-        if (!form.borrowerName || !form.totalValue || !form.installments || !form.purchaseDate || !form.card) {
+        if (!form.borrowerName || !form.borrowerCellPhone || !form.totalValue || !form.installments || !form.purchaseDate || !form.card) {
             setAlert({ type: "error", message: "Preencha todos os campos." });
             return;
         }
@@ -46,7 +48,7 @@ export function NewLoanModal({ open, onClose, onSave }: NewLoanModalProps) {
         try {
             await onSave(form);
             setAlert({ type: "success", message: "Empréstimo cadastrado!" });
-            setForm({ borrowerName: "", totalValue: 0, installments: 1, purchaseDate: "", card: "" });
+            setForm({ borrowerName: "", borrowerCellPhone: "", totalValue: 0, installments: 1, purchaseDate: "", card: "" });
             onClose();
         } catch (err) {
             setAlert({ type: "error", message: "Erro ao cadastrar empréstimo." });
@@ -74,6 +76,11 @@ export function NewLoanModal({ open, onClose, onSave }: NewLoanModalProps) {
                     <div>
                         <label>Nome de quem deve</label>
                         <Input value={form.borrowerName} onChange={(e) => handleChange("borrowerName", e.target.value)} placeholder="Ex: João da Silva" />
+                    </div>
+
+                      <div>
+                        <label>Celular de quem deve</label>
+                        <Input value={form.borrowerCellPhone} onChange={(e) => handleChange("borrowerCellPhone", e.target.value)} placeholder="Ex: 54999946652" />
                     </div>
 
                     <div>

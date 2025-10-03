@@ -38,6 +38,7 @@ model User {
   categories          Category[]
   passwordResetTokens PasswordResetToken[]
   debts               Debt[]
+  notifications       Notification[]
 }
 
 model MonthlyData {
@@ -94,6 +95,7 @@ model InstallmentExpense {
 model Borrower {
   id            String      @id @default(uuid())
   name          String
+  cellphone     String? 
   monthlyDataId String
   monthlyData   MonthlyData @relation(fields: [monthlyDataId], references: [id])
 }
@@ -101,6 +103,7 @@ model Borrower {
 model Debt {
   id           String @id @default(uuid())
   borrowerName String // apenas o nome do devedor
+  borrowerCellphone    String?
 
   amount  Float
   dueDate DateTime
@@ -153,6 +156,7 @@ model Category {
   user   User   @relation(fields: [userId], references: [id])
 
   name         String
+  budgetLimit  Float? 
   transactions Transaction[]
 }
 
@@ -162,5 +166,18 @@ model PasswordResetToken {
   user      User     @relation(fields: [userId], references: [id])
   token     String   @unique
   expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  title     String
+  message   String
+  type      String   // ex.: "installment_due", "unpaid_debt", "budget_over"
+  isRead    Boolean  @default(false)
+
   createdAt DateTime @default(now())
 }

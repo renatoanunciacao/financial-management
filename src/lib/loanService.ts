@@ -2,6 +2,7 @@ import { prisma } from "@lib/prisma";
 
 interface LoanFormData {
   borrowerName: string;
+  borrowerCellPhone: string;
   totalValue: number;
   installments: number;
   purchaseDate: string;
@@ -41,10 +42,11 @@ export async function createLoan(form: LoanFormData, userId: string) {
     });
   }
 
-  // cria o empréstimo (Debt) + parcelas (Installments)
+  // cria o empréstimo (Debt) + parcelas (Installments)'  1 b67qJU54RTFG768
   const loan = await prisma.debt.create({
     data: {
       borrowerName: form.borrowerName,
+      borrowerCellphone: form.borrowerCellPhone,
       amount: form.totalValue,
       dueDate: purchaseDate,
       cardId: card.id,
