@@ -10,6 +10,7 @@ import { TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import AlertMessage from "./Alert";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { LoansReportPDF } from "./LoansReportPTD";
+import DownloadLoans from "./DownloadLoans";
 
 interface CardLoan {
     id: string;
@@ -224,20 +225,11 @@ export default function CardLoansTable() {
     return (
         <div className="p-6 bg-gray-50 rounded-lg shadow-lg">
             <div className="flex justify-between items-center mb-6">
-                <PDFDownloadLink
-                    document={<LoansReportPDF debts={debts} user={{ name: user?.user?.name, email: user?.user?.email }} />}
-                    fileName="emprestimos.pdf"
-                    style={{
-                        backgroundColor: "#2563EB",
-                        color: "white",
-                        padding: "10px 20px",
-                        borderRadius: 6,
-                        textDecoration: "none",
-                        fontWeight: "bold"
-                    }}
-                >
-                    {({ loading }) => (loading ? "Gerando PDF..." : "📄 Gerar PDF")}
-                </PDFDownloadLink>
+                {debts && (
+                    <DownloadLoans debts={debts} user={{ name: user?.user?.name, email: user?.user?.email }} />
+                )}
+
+
                 <Button onClick={() => setModalOpen(true)}>+ Novo Empréstimo</Button>
             </div>
 

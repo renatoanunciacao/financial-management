@@ -16,6 +16,7 @@ export default function Dashboard() {
   const router = useRouter();
   const [reloadTrigger, setReloadTrigger] = useState<number>(0);
   const [summary, setSummary] = useState<{ incomes: number; expenses: number }>({ incomes: 0, expenses: 0 });
+  const [loading, setLoading] = useState<boolean>(true);
 
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export default function Dashboard() {
       <main className="flex flex-col p-6 space-y-6">
         <DashboardHeader />
 
-        <SummaryCards reloadTrigger={reloadTrigger} onSummaryChange={setSummary} />
+        <SummaryCards reloadTrigger={reloadTrigger} onSummaryChange={setSummary} onLoadingChange={setLoading} />
 
         <QuickActions onAddTransaction={handleAddTransaction} />
 

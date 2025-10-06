@@ -5,15 +5,17 @@ import React, { useEffect, useState } from 'react';
 interface SummaryCardsProps {
   reloadTrigger: number;
   onSummaryChange: (summary: { incomes: number; expenses: number }) => void;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
-export default function SummaryCards({ reloadTrigger, onSummaryChange }: SummaryCardsProps) {
+export default function SummaryCards({ reloadTrigger, onSummaryChange, onLoadingChange }: SummaryCardsProps) {
   const [totalIncome, setTotalIncome] = useState<number>(0);
   const [totalExpense, setTotalExpense] = useState<number>(0);
 
 
-  async function fetchSummary() {
+   async function fetchSummary() {
     try {
+      onLoadingChange?.(true);
       const res = await fetch('/api/summary');
       if (!res.ok) throw new Error('Erro ao buscar resumo');
 
@@ -24,8 +26,11 @@ export default function SummaryCards({ reloadTrigger, onSummaryChange }: Summary
       onSummaryChange({ incomes: data.totalIncomes, expenses: data.totalExpenses });
     } catch (error) {
       console.error(error);
+    } finally {
+      onLoadingChange?.(false);
     }
   }
+
 
 
   useEffect(() => {
