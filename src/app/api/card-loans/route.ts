@@ -1,8 +1,9 @@
+import { authOptions } from "@lib/auth";
 import { createLoan, getLoans } from "@lib/loanService";
-import { prisma } from "@lib/prisma";
-import { getServerSession } from "next-auth";
+import { Session } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+
 
 interface Params {
   params: { id: string };
@@ -10,7 +11,7 @@ interface Params {
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = (await getServerSession(authOptions)) as Session | null;
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Usuário não logado" },
@@ -31,7 +32,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = (await getServerSession(authOptions)) as Session | null;
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Usuário não logado" },

@@ -80,7 +80,7 @@ export default function Header() {
 
             {session && (
               <div className="flex items-center gap-4 relative">
-                <span className="text-gray-700 dark:text-gray-200">{session.user.name}</span>
+                <span className="text-gray-700 dark:text-gray-200">{session?.user?.name}</span>
 
                 <NotificationBell
                   unreadCount={unreadCount}
@@ -124,7 +124,7 @@ export default function Header() {
 
           {session && (
             <div className="flex flex-col mt-8 gap-2">
-              <span className="text-gray-700 dark:text-gray-200">{session.user.name}</span>
+              <span className="text-gray-700 dark:text-gray-200">{session?.user?.name}</span>
 
               {/* Sino notificações mobile */}
               <button

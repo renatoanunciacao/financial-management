@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 // Atualizar parcela como paga
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  context: any
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
 
     // Aqui você pode passar dados no body, caso queira mais infos
     const body = await req.json();

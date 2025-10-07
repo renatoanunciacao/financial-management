@@ -8,9 +8,11 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+// Adicionamos a index signature [key: string]: any
 interface CategoryData {
   name: string;
   value: number;
+  [key: string]: any;
 }
 
 interface CategoryPieChartProps {
@@ -31,9 +33,8 @@ const formatCurrency = (value: number) =>
 
 // Função para customizar o label das fatias
 const renderCustomizedLabel = (props: any) => {
-  const { cx, cy, midAngle, innerRadius, outerRadius, percent, index, payload } = props;
+  const { cx, cy, midAngle, innerRadius, outerRadius, payload } = props;
   
-  // Calcula a posição do label
   const RADIAN = Math.PI / 180;
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);

@@ -1,12 +1,12 @@
+import { authOptions } from "@lib/auth";
 import { prisma } from "@lib/prisma";
-import { getServerSession } from "next-auth";
-import { tryLoadManifestWithRetries } from "next/dist/server/load-components";
+import { Session } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "pages/api/auth/[...nextauth]";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = (await getServerSession(authOptions)) as Session | null;
     if (!session?.user?.email) {
       return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 });
     }
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
     try {
-        const session = await getServerSession(authOptions);
+        const session = (await getServerSession(authOptions)) as Session | null;
 
         if (!session?.user?.id) {
             return NextResponse.json({ message: "Não autenticado" }, { status: 401 });

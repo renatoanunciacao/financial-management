@@ -1,12 +1,14 @@
+import { authOptions } from "@lib/auth";
 import { generateNotifications } from "@lib/notifications";
 import { prisma } from "@lib/prisma";
-import { getServerSession } from "next-auth";
+import { Session } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
-import { authOptions } from "pages/api/auth/[...nextauth]";
+
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
+    const session = (await getServerSession(authOptions)) as Session | null;
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Usuário não logado" }, { status: 401 })
     }

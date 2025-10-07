@@ -9,7 +9,7 @@ import { LoanDetailModal, LoanDetailModalProps } from "./LoanDetailModal";
 import { TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import AlertMessage from "./Alert";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import { LoansReportPDF } from "./LoansReportPTD";
+import { LoansReportPDF } from "./LoansReportPDF";
 import DownloadLoans from "./DownloadLoans";
 
 interface CardLoan {
