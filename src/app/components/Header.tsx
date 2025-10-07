@@ -76,7 +76,6 @@ export default function Header() {
           <div className="hidden md:flex gap-6 items-center">
             <a href="/dashboard" className="text-gray-700 dark:text-gray-200 hover:text-blue-500">Dashboard</a>
             <a href="/card-loans" className="text-gray-700 dark:text-gray-200 hover:text-blue-500">Empréstimos via Cartões</a>
-            <a href="/about" className="text-gray-700 dark:text-gray-200 hover:text-blue-500">Sobre</a>
 
             {session && (
               <div className="flex items-center gap-4 relative">
@@ -120,7 +119,6 @@ export default function Header() {
         <div className="md:hidden px-4 pb-4 space-y-2 bg-white dark:bg-gray-900">
           <a href="/dashboard" className="block text-gray-700 dark:text-gray-200 hover:text-blue-500">Dashboard</a>
           <a href="/card-loans" className="block text-gray-700 dark:text-gray-200 hover:text-blue-500">Empréstimos via Cartões</a>
-          <a href="/about" className="block text-gray-700 dark:text-gray-200 hover:text-blue-500">Sobre</a>
 
           {session && (
             <div className="flex flex-col mt-8 gap-2">
