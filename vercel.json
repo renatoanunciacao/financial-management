@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/clear-old-notifications",
-      "schedule": "*/5 * * * *",
+      "schedule": "0 3 * * *",
       "headers": {
         "x-cron-secret": "@CRON_SECRET"
       }
