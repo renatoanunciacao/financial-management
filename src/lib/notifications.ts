@@ -77,8 +77,18 @@ export async function generateNotifications(sessionUserId?: string) {
   // 2. Dívidas não pagas (única notificação por usuário)
   // ============================
   const unpaid = await prisma.debt.findMany({
-    where: { userId, isPaid: false },
-  });
+  where: {
+    userId,
+    installments: {
+      some: { isPaid: false },
+    },
+  },
+  include: {
+    installments: true,
+  },
+});
+
+  console.log("unpaid",unpaid.length)
 
   if (unpaid.length > 0) {
     await createNotification({
