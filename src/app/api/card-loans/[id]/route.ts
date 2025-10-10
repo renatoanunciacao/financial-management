@@ -5,10 +5,11 @@ import { NextResponse } from "next/server";
 // GET /api/card-loans/:id
 export async function GET(
   req: Request,
-  context: any // sem Promise
+  context:  { params: Promise<{ id: string }> }
+
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await context.params;
 
     const loan = await prisma.debt.findUnique({
       where: { id },
@@ -48,10 +49,10 @@ export async function GET(
 
 // DELETE /api/card-loans/:id
 export async function DELETE(
-  req: Request,
-  context: any // sem Promise
+
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = context.params;
+  const { id } = await context.params;
 
   try {
     const loan = await prisma.debt.findUnique({

@@ -30,17 +30,6 @@ export default function Header() {
       .then(data => setNotifications(data.all || []))
   }, [])
 
-  // SSE
-  useEffect(() => {
-    const eventSource = new EventSource("/api/notifications/stream")
-    eventSource.onmessage = (event) => {
-      const newNotification: Notification = JSON.parse(event.data)
-      setNotifications(prev => [newNotification, ...prev])
-    }
-    eventSource.onerror = () => eventSource.close()
-    return () => eventSource.close()
-  }, [])
-
   // Fechar dropdown clicando fora
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

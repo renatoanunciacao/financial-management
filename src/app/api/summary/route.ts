@@ -1,48 +1,28 @@
-// /app/api/summary/route.ts
-import { NextResponse } from "next/server";
+// /api/summary/route.ts
 
-import { getServerSession } from "next-auth/next";
-import { prisma } from "@lib/prisma";
-import { Session } from "next-auth";
-import { authOptions } from "@lib/auth";
+import { prisma } from '@lib/prisma';
+import { NextResponse } from 'next/server';
 
-export async function GET() {
-  const session = (await getServerSession(authOptions)) as Session | null;
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const month = Number(url.searchParams.get('month'));
+  const year = Number(url.searchParams.get('year'));
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ message: "Não autenticado" }, { status: 401 });
-  }
+  const start = new Date(year, month - 1, 1);
+  const end = new Date(year, month, 0, 23, 59, 59, 999);
 
-  // Pega mês/ano atuais pela data de acesso
-  const now = new Date();
-  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-  // Soma despesas
-  const totalExpenses = await prisma.transaction.aggregate({
+  const incomes = await prisma.transaction.aggregate({
     _sum: { amount: true },
-    where: {
-      userId: session.user.id,
-      type: "expense",
-      date: { gte: firstDay, lte: lastDay },
-    },
+    where: { type: 'income', date: { gte: start, lte: end } },
   });
 
-  // Soma receitas
-  const totalIncomes = await prisma.transaction.aggregate({
+  const expenses = await prisma.transaction.aggregate({
     _sum: { amount: true },
-    where: {
-      userId: session.user.id,
-      type: "income",
-      date: { gte: firstDay, lte: lastDay },
-    },
+    where: { type: 'expense', date: { gte: start, lte: end } },
   });
 
   return NextResponse.json({
-    totalExpenses: totalExpenses._sum.amount || 0,
-    totalIncomes: totalIncomes._sum.amount || 0,
-    balance: (totalIncomes._sum.amount || 0) - (totalExpenses._sum.amount || 0),
-    month: now.getMonth() + 1,
-    year: now.getFullYear(),
+    totalIncomes: incomes._sum.amount || 0,
+    totalExpenses: expenses._sum.amount || 0,
   });
 }

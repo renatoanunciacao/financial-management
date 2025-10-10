@@ -18,19 +18,20 @@ export default function RecentTransactions() {
   const [selectedMonth, setSelectedMonth] = useState<string>('all');
 
   // Lista de meses disponíveis a partir das transações
- const months = useMemo(() => {
-  const uniqueMonths = Array.from(
-    new Set(
-      transactions.map(tx => {
-        const date = new Date(tx.date);
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 para mês correto
-        return `${year}-${month}`;
-      })
-    )
-  );
-  return uniqueMonths.sort((a, b) => b.localeCompare(a)); // mais recente para mais antigo
-}, [transactions]);
+  const months = useMemo(() => {
+    const uniqueMonths = Array.from(
+      new Set(
+        transactions.map(tx => {
+          const date = new Date(tx.date);
+          const year = date.getFullYear();
+          const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 para mês correto
+          return `${year}-${month}`;
+        })
+      )
+    );
+    // Ordena do mais recente para o mais antigo
+    return uniqueMonths.sort((a, b) => b.localeCompare(a));
+  }, [transactions]);
 
   // Filtra as transações pelo mês selecionado
   const filteredTransactions = useMemo(() => {
@@ -43,8 +44,8 @@ export default function RecentTransactions() {
       <h2 className="text-lg font-semibold mb-4">Últimas movimentações</h2>
 
       {/* Filtro de mês */}
-      
-    <div className="mb-6 flex items-center gap-3">
+
+      <div className="mb-6 flex items-center gap-3">
         <label className="font-medium text-gray-700">Filtrar por mês:</label>
         <select
           className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
@@ -52,12 +53,16 @@ export default function RecentTransactions() {
           onChange={(e) => setSelectedMonth(e.target.value)}
         >
           <option value="all">Todos</option>
-          {months.map(month => (
-            <option key={month} value={month}>
-              {new Date(month + '-01').toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}
-            </option>
-          ))}
+          {months.map(month => {
+            const [year, monthNumber] = month.split('-').map(Number); // separa ano e mês
+            return (
+              <option key={month} value={month}>
+                {new Date(year, monthNumber - 1).toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}
+              </option>
+            );
+          })}
         </select>
+
       </div>
 
       {isLoading ? (

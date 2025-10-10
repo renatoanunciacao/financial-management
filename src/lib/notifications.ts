@@ -88,8 +88,6 @@ export async function generateNotifications(sessionUserId?: string) {
   },
 });
 
-  console.log("unpaid",unpaid.length)
-
   if (unpaid.length > 0) {
     await createNotification({
       userId,
