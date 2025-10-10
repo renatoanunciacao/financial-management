@@ -5,7 +5,8 @@ import { NextResponse } from "next/server";
 // GET /api/card-loans/:id
 export async function GET(
   req: Request,
-  context: { params: { id: string } } // ✅ sem Promise
+  context:  { params: { id: string } }
+
 ) {
   try {
     const { id } = context.params;
@@ -48,8 +49,8 @@ export async function GET(
 
 // DELETE /api/card-loans/:id
 export async function DELETE(
-  req: Request,
-  context: { params: { id: string } } // ✅ sem Promise
+
+  context: { params: { id: string } }
 ) {
   const { id } = context.params;
 
