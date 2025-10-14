@@ -20,7 +20,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     })
 
-    return NextResponse.json({ all: notifications })
+    return NextResponse.json(notifications)
   } catch (err: any) {
     console.error(err)
     return NextResponse.json({ error: "Erro ao buscar notificações" }, { status: 500 })

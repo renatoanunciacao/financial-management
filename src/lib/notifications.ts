@@ -56,9 +56,11 @@ export async function generateNotifications(sessionUserId?: string) {
   }
 
   for (const debtId in installmentsByDebt) {
+    console.log("debtId", debtId)
     const debtInstallments = installmentsByDebt[debtId];
     const debtName = debtInstallments[0].debt?.borrowerName ?? "";
     const count = debtInstallments.length;
+   
 
     const message =
       count === 1
@@ -77,18 +79,30 @@ export async function generateNotifications(sessionUserId?: string) {
   // 2. Dívidas não pagas (única notificação por usuário)
   // ============================
   const unpaid = await prisma.debt.findMany({
-  where: {
-    userId,
-    installments: {
-      some: { isPaid: false },
+    where: {
+      userId,
+      installments: {
+        some: { isPaid: false },
+      },
     },
-  },
-  include: {
-    installments: true,
-  },
-});
+    include: {
+      installments: true,
+    },
+  });
 
-  if (unpaid.length > 0) {
+  if (unpaid.length === 0) return;
+
+  const existing = await prisma.notification.findFirst({
+    where: { userId, type: "unpaid_debt", isRead: false },
+    orderBy: { createdAt: 'desc' }, // pega a mais recente
+  });
+
+  if (existing) {
+    await prisma.notification.update({
+      where: { id: existing.id },
+      data: { message: `Você tem ${unpaid.length} dívida(s) ainda não pagas.` },
+    });
+  } else if (unpaid.length > 0) {
     await createNotification({
       userId,
       title: "Dívidas em aberto",
@@ -96,7 +110,6 @@ export async function generateNotifications(sessionUserId?: string) {
       type: "unpaid_debt",
     });
   }
-
   // ============================
   // 3. Orçamento estourado
   // ============================

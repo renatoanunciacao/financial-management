@@ -20,15 +20,23 @@ export default function Header() {
   const [notifications, setNotifications] = useState<Notification[]>([])
 
   const dropdownRef = useRef<HTMLDivElement>(null)
-
+console.log("notifications", notifications.length)
   const unreadCount = notifications.filter(n => !n.isRead).length
 
   // Buscar notificações
   useEffect(() => {
-    fetch("/api/notifications/all")
-      .then(res => res.json())
-      .then(data => setNotifications(data.all || []))
-  }, [])
+  fetch("/api/notifications/all")
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data)) {
+        console.log("Notificações carregadas:", data.length)
+        setNotifications(data)
+      } else {
+        setNotifications([])
+      }
+    })
+}, [])
+
 
   // Fechar dropdown clicando fora
   useEffect(() => {
