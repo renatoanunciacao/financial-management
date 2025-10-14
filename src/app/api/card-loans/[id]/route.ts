@@ -13,10 +13,14 @@ export async function GET(
 
     const loan = await prisma.debt.findUnique({
       where: { id },
+      
       include: {
         card: true,
-        installments: true,
-      },
+        installments: {
+          orderBy: [{ isPaid: 'asc' }, { dueDate: 'asc' }]
+        }
+      
+      }
     });
 
     if (!loan) {

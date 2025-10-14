@@ -14,7 +14,10 @@ interface Transaction {
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function RecentTransactions() {
-  const { data: transactions = [], isLoading } = useSWR<Transaction[]>('/api/transactions', fetcher);
+  const { data: transactions = [], isLoading } = useSWR<Transaction[]>('/api/transactions', fetcher, {
+    revalidateOnFocus: false,
+    refreshInterval: 0,
+  });
   const [selectedMonth, setSelectedMonth] = useState<string>('all');
 
   // Lista de meses disponíveis a partir das transações
