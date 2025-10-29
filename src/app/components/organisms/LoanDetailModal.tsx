@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from "react";
-import { Button } from "./ui/Button";
-import AlertMessage from "./Alert";
+import { Button } from "../atoms/Button";
+import AlertMessage from "../atoms/Alert";
 
 interface Installment {
     id: string;

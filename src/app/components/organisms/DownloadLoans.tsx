@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 
 // Componente do PDF (não precisa ssr)
-const LoansPDFLink = dynamic(() => import('./LoansPDFLink'), { ssr: false });
+const LoansPDFLink = dynamic(() => import('../molecules/LoansPDFLink'), { ssr: false });
 
 // Props
 interface DownloadProps {

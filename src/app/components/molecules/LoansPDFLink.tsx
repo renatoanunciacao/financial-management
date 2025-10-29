@@ -1,7 +1,8 @@
 'use client';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import { LoansReportPDF } from './LoansReportPDF';
+import { LoansReportPDF } from '../organisms/LoansReportPDF';
+
 
 interface Props {
   debts: any[];

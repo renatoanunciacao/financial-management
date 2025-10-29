@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useMemo, useTransition } from "react";
 import { ColumnDef, useReactTable, getCoreRowModel, getPaginationRowModel, flexRender } from "@tanstack/react-table";
-import { Button } from "./ui/Button";
-import { NewLoanModal } from "./LoanFormData";
+import { Button } from "../atoms/Button";
 import { Pagination } from "./Pagination";
-import { LoanDetailModal, LoanDetailModalProps } from "./LoanDetailModal";
 import { TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
-import AlertMessage from "./Alert";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import { LoansReportPDF } from "./LoansReportPDF";
-import DownloadLoans from "./DownloadLoans";
+import AlertMessage from "../atoms/Alert";
+import { LoanDetailModal, LoanDetailModalProps } from "../organisms/LoanDetailModal";
+import DownloadLoansPDF from "../organisms/DownloadLoans";
+import { NewLoanModal } from "./LoanFormData";
+
+
 
 interface CardLoan {
     id: string;
@@ -226,7 +226,7 @@ export default function CardLoansTable() {
         <div className="p-6 bg-gray-50 rounded-lg shadow-lg">
             <div className="flex justify-between items-center mb-6">
                 {debts && (
-                    <DownloadLoans debts={debts} user={{ name: user?.user?.name, email: user?.user?.email }} />
+                    <DownloadLoansPDF debts={debts} user={{ name: user?.user?.name, email: user?.user?.email }} />
                 )}
 
 

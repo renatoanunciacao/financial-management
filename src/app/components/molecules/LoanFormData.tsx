@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from "react";
-import { Input } from "./ui/Input";
-import { Button } from "./ui/Button";
-import Alert from "./Alert"; // seu componente Alert
+import { Input } from "../atoms/Input";
+import { Button } from "../atoms/Button";
+import AlertMessage from "../atoms/Alert";
 
 interface NewLoanModalProps {
     open: boolean;
@@ -110,7 +110,7 @@ export function NewLoanModal({ open, onClose, onSave }: NewLoanModalProps) {
                     <Button onClick={handleSubmit} disabled={loading}>{loading ? "Salvando..." : "Salvar"}</Button>
                 </div>
 
-                {alert && <Alert alert={alert} onClose={() => setAlert(null)} />}
+                {alert && <AlertMessage alert={alert} onClose={() => setAlert(null)} />}
             </div>
         </div>
     );

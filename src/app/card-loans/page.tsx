@@ -1,7 +1,7 @@
 'use client';
 
-import CardLoansTable from '@app/components/CardLoansTable';
-import Header from '@app/components/Header';
+import CardLoansTable from '@app/components/molecules/CardLoansTable';
+import Header from '@app/components/organisms/Header';
 import React from 'react';
 
 export default function LoansPage() {

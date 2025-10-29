@@ -3,8 +3,8 @@
 import { signOut, useSession } from 'next-auth/react'
 import { useState, useEffect, useRef } from 'react'
 import { Menu, X } from 'lucide-react'
-import NotificationBell from './NotificationBell'
-import NotificationList from './NotificationList'
+import NotificationBell from '../molecules/NotificationBell'
+import NotificationList from '../molecules/NotificationList'
 
 interface Notification {
   id: string
@@ -72,7 +72,7 @@ console.log("notifications", notifications.length)
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-6 items-center">
             <a href="/dashboard" className="text-gray-700 dark:text-gray-200 hover:text-blue-500">Dashboard</a>
-            <a href="/card-loans" className="text-gray-700 dark:text-gray-200 hover:text-blue-500">Empréstimos via Cartões</a>
+            <a href="/card-loans" className="text-gray-700 dark:text-gray-200 hover:text-blue-500">Divídas</a>
 
             {session && (
               <div className="flex items-center gap-4 relative">
@@ -115,7 +115,7 @@ console.log("notifications", notifications.length)
       {isMobileMenuOpen && (
         <div className="md:hidden px-4 pb-4 space-y-2 bg-white dark:bg-gray-900">
           <a href="/dashboard" className="block text-gray-700 dark:text-gray-200 hover:text-blue-500">Dashboard</a>
-          <a href="/card-loans" className="block text-gray-700 dark:text-gray-200 hover:text-blue-500">Empréstimos via Cartões</a>
+          <a href="/card-loans" className="block text-gray-700 dark:text-gray-200 hover:text-blue-500">Divídas</a>
 
           {session && (
             <div className="flex flex-col mt-8 gap-2">

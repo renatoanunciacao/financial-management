@@ -1,5 +1,5 @@
 import { Table } from '@tanstack/react-table';
-import { Button } from './ui/Button';
+import { Button } from '../atoms/Button';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 interface PaginationProps<TData> {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Alert from './Alert';
+import AlertMessage from '../atoms/Alert';
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -139,7 +139,7 @@ export default function AddTransactionModal({ isOpen, onClose, type, onSubmit }:
         </form>
 
         {alert && (
-          <Alert
+          <AlertMessage
             alert={alert}
             onClose={() => setAlert(null)}
           />

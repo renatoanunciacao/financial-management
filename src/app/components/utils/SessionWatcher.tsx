@@ -2,7 +2,8 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Alert from './Alert';
+import AlertMessage from "../atoms/Alert";
+
 
 export function SessionWatcher() {
     const router = useRouter();
@@ -24,7 +25,7 @@ export function SessionWatcher() {
     if (!alert) return null;
 
     return (
-        <Alert
+        <AlertMessage
             alert={alert}
             onClose={() => setAlert(null)}
         />

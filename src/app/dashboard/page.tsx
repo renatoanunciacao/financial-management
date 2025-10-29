@@ -1,12 +1,12 @@
 'use client';
 
-import DashboardHeader from '@app/components/DashboardHeader';
-import IncomeExpenseChart from '@app/components/IncomeExpenseChart';
-import QuickActions from '@app/components/QuickActions';
-import RecentTransactions from '@app/components/RecentTransactions';
-import SummaryCards from '@app/components/SummaryCards';
+import DashboardHeader from '@app/components/organisms/DashboardHeader';
+import IncomeExpenseChart from '@app/components/organisms/IncomeExpenseChart';
+import QuickActions from '@app/components/molecules/QuickActions';
+import RecentTransactions from '@app/components/organisms/RecentTransactions';
+import SummaryCards from '@app/components/molecules/SummaryCards';
 import { LoadingBubbles } from '@app/components/ui/LoadingBubles';
-import Header from '@components/Header';
+import Header from '@app/components/organisms/Header';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

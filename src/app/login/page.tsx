@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Input } from "@components/ui/Input";
-import { Button } from "@components/ui/Button";
+import { Input } from "@app/components/atoms/Input";
+import { Button } from "@app/components/atoms/Button";
 import { LoadingBubbles } from "@app/components/ui/LoadingBubles";
 
 export default function Login() {

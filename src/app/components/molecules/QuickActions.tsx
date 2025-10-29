@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import AddTransactionModal from './AddTransactionModal';
+
 import { mutate } from 'swr';
-import AlertMessage from './Alert';
+import AlertMessage from '../atoms/Alert';
+import AddTransactionModal from '../organisms/AddTransactionModal';
 
 export default function QuickActions({ onAddTransaction }: { onAddTransaction: () => void }) {
   const [modalType, setModalType] = useState<'income' | 'expense' | null>(null);
